@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//a.amap.com/Loca/static/manual/example/style/demo.css" rel="stylesheet">
+    <title>银行网点</title>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+    <style>
+        html,
+        body,
+        #container {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .input-card {
+            width: 18rem;
+            z-index: 170;
+        }
+
+        .input-card .btn {
+            margin-right: .8rem;
+        }
+
+        .input-card .btn:last-child {
+            margin-right: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div id="container" class="container"></div>
+<script src="//webapi.amap.com/maps?v=1.4.15&key=d4f9cb47c5fc1a98c2cb8a947d0d1867"></script>
+<script src="//webapi.amap.com/loca?v=1.3.2&key=d4f9cb47c5fc1a98c2cb8a947d0d1867"></script>
+<script src="//a.amap.com/Loca/static/manual/example/script/demo.js"></script>
+<script src="//a.amap.com/Loca/static/mock/banks.js"></script>
+<div class="input-card" style="width: auto;">
+    <div class="input-item">
+        <button id="show-obj3d-btn" onclick="showLayer()" class="btn">显示图层</button>
+        <button id="hide-obj3d-btn" onclick="hideLayer()" class="btn">隐藏图层</button>
+    </div>
+</div>
+<script>
+
+    var map = new AMap.Map('container', {
+        pitch: 66,
+        center: [116.473168, 39.993015],
+        zoom: 15,
+        mapStyle: 'amap://styles/1de318cbb8d12c02303a22c550b9ccc9',
+        viewMode: '2D'
+    });
+
+    var bankMap = {
+        160104: '中国银行',
+        160139: '邮政银行',
+        160105: '工商银行',
+        160106: '其他银行',
+        160108: '交通银行',
+        160107: '农业银行',
+        160109: '招商银行',
+        160111: '光大银行',
+    };
+
+    var vl = new Loca.IconLayer({
+        map: map
+    });
+    var bankData = [
+        {
+            "id": "B000A83IY9",
+            "typecode": "160139",
+            "address": "南湖东园201号楼",
+            "location": [
+                "116.464087",
+                "40.000887"
+            ],
+            "name": "中国邮政储蓄银行(南湖东园营业所)",
+            "tel": ''
+        },
+        {
+            "id": "B000A83EMQ",
+            "typecode": "160139",
+            "address": "望京西园1区120号楼",
+            "location": [
+                "116.473634",
+                "40.004443"
+            ],
+            "name": "中国邮政储蓄银行(望京支行)",
+            "tel": ''
+        },
+        {
+            "id": "B0FFG73C69",
+            "typecode": "160139",
+            "address": "大山子北里35号楼",
+            "location": [
+                "116.487853",
+                "39.984170"
+            ],
+            "name": "中国邮政储蓄银行(大山子北里营业所)",
+            "tel": "010-64330251;010-64373873"
+        },
+        {
+            "id": "B0FFFEINC3",
+            "typecode": "160139",
+            "address": "酒仙桥路13号",
+            "location": [
+                "116.489345",
+                "39.979480"
+            ],
+            "name": "中国邮政储蓄银行(大山子支行)",
+            "tel": ''
+        }
+    ];
+    vl.setData(bankData, {
+        lnglat: 'location'
+    });
+
+    vl.setOptions({
+        source: function (res) {
+            var value = res.value;
+            var typecode = value.typecode;
+            // 这里需要写上 http 协议，不能忽略
+            var src = 'https://a.amap.com/Loca/static/manual/banks/' + bankMap[typecode] + '.png';
+            return src;
+        },
+        style: {
+            size: 30
+        }
+    });
+
+    vl.render();
+
+
+    var layer = new Loca.LinkLayer({
+        map: map,
+        fitView: true,
+    });
+    var line = [
+        {
+            'line': ["116.464087,40.000887", "116.473634,40.004443"]
+        },
+        {
+            'line': ["116.473634,40.004443", "116.487853,39.984170"]
+        },
+        {
+            'line': ["116.487853,39.984170", "116.489345,39.979480"]
+        },
+    ]
+    layer.setData(line, {
+        lnglat: 'line'
+    });
+
+    layer.setOptions({
+        style: {
+            borderWidth: 1.5,
+            opacity: 0.8,
+            color: '#ff461f'
+        }
+    });
+
+    layer.render();
+
+    //显示图层
+    function showLayer() {
+        vl.show();
+        layer.show();
+    }
+
+    //隐藏图层
+    function hideLayer() {
+        vl.hide();
+        layer.hide();
+    }
+</script>
+</body>
+</html>

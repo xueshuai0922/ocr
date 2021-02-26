@@ -1,0 +1,8 @@
+server:
+  port: 8888
+#picpath :
+#spring:
+#  resources:
+#    static-locations: classpath:/META-INF/resources/
+logging:
+  file: ocr.log
